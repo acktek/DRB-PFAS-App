@@ -737,7 +737,7 @@ with tab1:
                     plot_bgcolor='rgba(0,0,0,0)',
                     paper_bgcolor='rgba(0,0,0,0)'
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
 
                 # Stats
                 st.markdown(f"""
@@ -773,7 +773,7 @@ with tab1:
                     plot_bgcolor='rgba(0,0,0,0)',
                     paper_bgcolor='rgba(0,0,0,0)'
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
 
 with tab2:
     st.markdown('<div class="info-card"><h3>Delaware River Estuary Analysis</h3><p>PFAS trends along river miles</p></div>', unsafe_allow_html=True)
@@ -835,7 +835,7 @@ with tab2:
                 paper_bgcolor='white'
             )
 
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         else:
             st.info("No data points found within the Delaware River Estuary for current selection")
     else:
