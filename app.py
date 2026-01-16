@@ -191,11 +191,38 @@ def load_data():
 
         return {'raw': raw, 'grouped': grouped, 'all': all_pfas}
 
+    def clean_dataframe(df):
+        """Remove infinity and invalid values from dataframe"""
+        # Replace inf/-inf with NaN
+        df = df.replace([np.inf, -np.inf], np.nan)
+
+        # Clean all numeric columns
+        numeric_cols = df.select_dtypes(include=[np.number]).columns
+        for col in numeric_cols:
+            # Replace any remaining non-finite values with NaN
+            df[col] = df[col].where(np.isfinite(df[col]), np.nan)
+
+        # Ensure critical columns are finite
+        if 'Latitude' in df.columns:
+            df = df[np.isfinite(df['Latitude']) | df['Latitude'].isna()]
+        if 'Longitude' in df.columns:
+            df = df[np.isfinite(df['Longitude']) | df['Longitude'].isna()]
+        if 'Result.Measure.Value..ppt.' in df.columns:
+            df = df[np.isfinite(df['Result.Measure.Value..ppt.']) | df['Result.Measure.Value..ppt.'].isna()]
+
+        return df
+
     data_path = Path(__file__).parent
     water_df = pd.read_csv(data_path / "PFAS_water_data_DRB_20260112.csv")
     gw_df = pd.read_csv(data_path / "PFAS_ground_water_data_DRB_20260112.csv")
     sed_df = pd.read_csv(data_path / "PFAS_sediment_data_DRB_20260112.csv")
     tissue_df = pd.read_csv(data_path / "PFAS_tissue_data_DRB_20260112.csv")
+
+    # Clean all dataframes immediately after loading
+    water_df = clean_dataframe(water_df)
+    gw_df = clean_dataframe(gw_df)
+    sed_df = clean_dataframe(sed_df)
+    tissue_df = clean_dataframe(tissue_df)
 
     sed_df['Result.Measure.Value..ppt.'] = sed_df['Result.Measure.Value..ppt.'] / 1000
     tissue_df['Result.Measure.Value..ppt.'] = tissue_df['Result.Measure.Value..ppt.'] / 1000
@@ -387,6 +414,15 @@ def aggregate_coords(df, method="Most Recent"):
     if df.empty:
         return df
 
+    # Clean input data first
+    df = df.copy()
+    df = df.replace([np.inf, -np.inf], np.nan)
+
+    # Remove rows with invalid lat/lon or conc
+    df = df.dropna(subset=['lat', 'lon'])
+    if 'conc' in df.columns:
+        df = df[np.isfinite(df['conc'])]
+
     if method == "Most Recent":
         result = df.sort_values('yr', ascending=False).groupby(['lat', 'lon']).first().reset_index()
     elif method == "Maximum":
@@ -403,6 +439,12 @@ def aggregate_coords(df, method="Most Recent"):
         result = result[[c for c in result.columns if not c.endswith('_drop')]]
     else:
         result = df
+
+    # Final cleaning
+    result = result.replace([np.inf, -np.inf], np.nan)
+    result = result.dropna(subset=['lat', 'lon'])
+    if 'conc' in result.columns:
+        result = result[np.isfinite(result['conc'])]
 
     return result
 
