@@ -1,0 +1,13 @@
+name: DRB_PFAS_App
+title: DRB_PFAS_App
+username: drbc-jlc
+account: drbc-jlc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16393098
+bundleId: 11423356
+url: https://drbc-jlc.shinyapps.io/DRB_PFAS_App/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: app.R|pacz_shapefile.dbf|pacz_shapefile.prj|pacz_shapefile.shp|pacz_shapefile.shx

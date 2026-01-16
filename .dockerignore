@@ -1,0 +1,28 @@
+# Git files
+.git
+.gitignore
+
+# R history and session files
+.Rhistory
+.RData
+.Rproj.user
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# IDE files
+.vscode
+.idea
+*.Rproj
+
+# rsconnect deployment files (not needed for Docker)
+rsconnect/
+
+# Documentation
+README.md
+*.md
+
+# Temporary files
+*.tmp
+*.log

@@ -1,0 +1,13 @@
+# R files
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+
+# IDE files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.log
